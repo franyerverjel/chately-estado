@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-23T18:46:29.063147+00:00",
+ "generated_at": "2026-10-23T18:47:26.808357+00:00",
  "status": "partial",
  "status_label": "Falla parcial del servicio",
  "components": [
@@ -93,8 +93,15 @@
    "started_at": "2026-10-23T17:58:45.079497+00:00",
    "resolved_at": null,
    "visible_until": null,
-   "updated_at": "2026-10-23T17:58:45.081515+00:00",
+   "updated_at": "2026-10-23T18:47:26.793027+00:00",
    "updates": [
+    {
+     "id": "dbbf2073-47a0-42ee-9c8e-d66324e6d4ec",
+     "status": "monitoring",
+     "status_label": "Monitoreando",
+     "body": "Hay problemas de conectividad de red que afectan a los servicios de Chately en Norteamérica. Seguimos monitoreando la situación; aún no podemos confirmar qué funciones no están afectadas.",
+     "created_at": "2026-10-23T18:47:26.793027+00:00"
+    },
     {
      "id": "b625ae1b-1a22-4180-b329-75d1bd036df5",
      "status": "monitoring",
