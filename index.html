@@ -6,99 +6,149 @@
 <title>Estado de Chately</title>
 <meta name="description" content="Estado en vivo de Chately: panel, app, WhatsApp, IA y más.">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#F6F7F4">
+<link rel="icon" href="https://chately.co/favicon.png">
+<!-- Las mismas fuentes de chately.co. Si no cargan (internet a medias), la página se pinta igual con las del sistema:
+     el logo va incrustado y no hay ningún otro recurso externo. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
 <style>
-  /* Página autónoma: sin fuentes ni scripts externos, porque tiene que cargar aunque medio internet esté caído. */
+  /* Sistema visual de chately.co (docs/sitio/DESIGN.md): papel, tinta, bordes finos y el verde del logo como único
+     acento. Los colores de estado (ámbar, naranja, rojo) solo aparecen cuando algo falla. */
   :root {
-    --ink: #081924; --muted: #5b6b78; --line: #e4e9ee; --card: #ffffff; --bg: #f5f7f9;
-    --ok: #1f9d55; --ok-soft: #e7f7ee; --degraded: #b7791f; --degraded-soft: #fdf6e3;
-    --partial: #dd6b20; --partial-soft: #fdeee3; --major: #d64545; --major-soft: #fdecec;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --ink: #e8eef3; --muted: #93a3b1; --line: #22313d; --card: #0f1d27; --bg: #081924;
-      --ok-soft: #10301f; --degraded-soft: #33270f; --partial-soft: #3a2312; --major-soft: #3b1717;
-    }
+    --paper: #F6F7F4; --ink: #081924; --ink-soft: #2C3A44; --ink-muted: #5B6873; --line: #E2E6E3;
+    --line-strong: #CBD2CE; --brand: #62D48B; --brand-700: #287744; --brand-wash: #EFFBF3;
+    --degraded: #B7791F; --partial: #C2571A; --major: #C53030;
+    --display: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink);
-    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
-  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -.01em; }
-  .logo { width: 28px; height: 28px; border-radius: 8px; background: #62D48B; display: grid; place-items: center;
-    color: #081924; font-weight: 800; }
-  .updated { color: var(--muted); font-size: 13px; }
-  .hero { border-radius: 16px; padding: 22px 22px; display: flex; gap: 14px; align-items: center; margin-bottom: 28px;
-    border: 1px solid var(--line); background: var(--card); }
-  .hero .dot { width: 14px; height: 14px; flex: none; }
-  .hero h1 { margin: 0; font-size: 20px; letter-spacing: -.01em; }
-  .hero p { margin: 2px 0 0; color: var(--muted); }
-  .hero.operational { background: var(--ok-soft); border-color: transparent; }
-  .hero.degraded { background: var(--degraded-soft); border-color: transparent; }
-  .hero.partial { background: var(--partial-soft); border-color: transparent; }
-  .hero.major { background: var(--major-soft); border-color: transparent; }
-  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--ok); }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--sans);
+    -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 20px 72px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo { display: block; height: 30px; width: auto; }
+  .button { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line-strong); background: #fff;
+    border-radius: 999px; padding: 7px 16px; font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap; }
+  .button:hover { border-color: var(--ink-muted); }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 56px 0 14px; font: 500 12px/1 var(--mono);
+    letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); flex: none; }
   .dot.degraded { background: var(--degraded); } .dot.partial { background: var(--partial); }
-  .dot.major { background: var(--major); } .dot.resolved { background: var(--ok); }
-  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 32px 0 10px; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-  .row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; gap: 12px; }
+  .dot.major { background: var(--major); } .dot.operational, .dot.resolved { background: var(--brand); }
+  .live { box-shadow: 0 0 0 0 rgba(98, 212, 139, .55); animation: pulse 2.4s infinite; }
+  .live.degraded { box-shadow: 0 0 0 0 rgba(183, 121, 31, .5); } .live.partial { box-shadow: 0 0 0 0 rgba(194, 87, 26, .5); }
+  .live.major { box-shadow: 0 0 0 0 rgba(197, 48, 48, .5); }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 7px rgba(0, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); } }
+  @media (prefers-reduced-motion: reduce) { .live { animation: none; } }
+  h1 { margin: 0; font: 600 clamp(34px, 6vw, 52px)/1.05 var(--display); letter-spacing: -.035em; }
+  h1 em { font: italic 400 1.08em/1 var(--serif); letter-spacing: -.01em; }
+  h1.operational em { color: var(--brand-700); } h1.degraded em { color: var(--degraded); }
+  h1.partial em { color: var(--partial); } h1.major em { color: var(--major); }
+  .lead { margin: 16px 0 0; max-width: 560px; font-size: 18px; color: var(--ink-soft); }
+  .updated { margin-top: 14px; font: 500 12px/1 var(--mono); color: var(--ink-muted); }
+  h2 { margin: 48px 0 12px; font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-muted); }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 24px; overflow: hidden; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 22px; }
   .row + .row { border-top: 1px solid var(--line); }
-  .row .state { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; white-space: nowrap; }
-  .incident { padding: 16px; }
+  .state { display: inline-flex; align-items: center; gap: 8px; font: 500 13px/1 var(--mono); color: var(--ink-muted);
+    white-space: nowrap; }
+  .incident { padding: 22px; }
   .incident + .incident { border-top: 1px solid var(--line); }
-  .incident h3 { margin: 0 0 4px; font-size: 16px; }
-  .meta { color: var(--muted); font-size: 13px; }
-  .pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px;
-    background: var(--line); color: var(--ink); margin-right: 6px; }
-  .pill.major { background: var(--major-soft); color: var(--major); }
-  .pill.partial { background: var(--partial-soft); color: var(--partial); }
-  .pill.degraded { background: var(--degraded-soft); color: var(--degraded); }
-  .pill.resolved { background: var(--ok-soft); color: var(--ok); }
-  ol.timeline { list-style: none; margin: 12px 0 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); }
-  ol.timeline li { position: relative; padding: 0 0 12px 10px; }
-  ol.timeline li::before { content: ""; position: absolute; left: -20px; top: 7px; width: 10px; height: 10px;
-    border-radius: 50%; background: var(--card); border: 2px solid var(--muted); }
-  ol.timeline li:first-child::before { border-color: var(--ink); background: var(--ink); }
-  ol.timeline b { font-weight: 600; }
-  ol.timeline p { margin: 2px 0 0; white-space: pre-line; }
-  .empty { padding: 16px; color: var(--muted); }
-  footer { margin-top: 40px; color: var(--muted); font-size: 13px; text-align: center; }
-  footer a { color: inherit; }
-  @media (max-width: 520px) {
+  .incident h3 { margin: 0 0 6px; font: 600 20px/1.25 var(--display); letter-spacing: -.02em; }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 14px; color: var(--ink-muted); }
+  .tag { display: inline-flex; align-items: center; gap: 6px; font: 500 12px/1 var(--mono); padding: 5px 10px;
+    border-radius: 999px; background: var(--paper); border: 1px solid var(--line); color: var(--ink-soft); }
+  .incident.degraded { box-shadow: inset 3px 0 0 var(--degraded); } .incident.partial { box-shadow: inset 3px 0 0 var(--partial); }
+  .incident.major { box-shadow: inset 3px 0 0 var(--major); }
+  ol.timeline { list-style: none; margin: 18px 0 0; padding: 0 0 0 18px; border-left: 1px solid var(--line-strong); }
+  ol.timeline li { position: relative; padding: 0 0 16px 4px; }
+  ol.timeline li:last-child { padding-bottom: 0; }
+  ol.timeline li::before { content: ""; position: absolute; left: -23px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: #fff; border: 1px solid var(--line-strong); }
+  ol.timeline li:first-child::before { background: var(--ink); border-color: var(--ink); }
+  .when { font: 500 12px/1.4 var(--mono); color: var(--ink-muted); }
+  .when b { color: var(--ink); font-weight: 500; }
+  ol.timeline p { margin: 4px 0 0; white-space: pre-line; color: var(--ink-soft); }
+  .empty { padding: 22px; color: var(--ink-muted); }
+  footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap;
+    justify-content: space-between; gap: 12px; font-size: 14px; color: var(--ink-muted); }
+  footer a { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 560px) {
     main { padding-top: 20px; }
-    header { flex-direction: column; align-items: flex-start; gap: 4px; }
-    .brand { white-space: nowrap; }
-    .hero { padding: 18px; }
-    .hero h1 { font-size: 18px; }
+    .logo { height: 26px; }
+    .eyebrow { margin-top: 40px; }
+    .lead { font-size: 16px; }
+    .row, .incident { padding-left: 18px; padding-right: 18px; }
   }
 </style>
 </head>
 <body>
 <main>
   <header>
-    <div class="brand"><span class="logo">C</span> Estado de Chately</div>
-    <div class="updated" id="updated"></div>
+    <a href="https://chately.co" aria-label="Chately"><svg class="logo" role="img" aria-label="Chately" viewBox="0 0 3873 766" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+		<g transform="translate(-1562, -2154)">
+			<g transform="translate(1562, 2154)">
+				<path d="M152.028955,164.076062 L285.314114,311.440772 L394.381317,185.876823 C400.043833,214.423433 404.7077,227.797421 408.372918,225.998787 C457.818147,201.734507 382.113657,253.51959 414.751988,283.8548 C447.573133,314.359925 508.54905,263.426221 494.066243,312.351433 C493.052438,315.776226 505.697024,318.165338 532,319.518768 L356.074294,540.760274 C330.731271,567.586758 303.250744,581 273.632713,581 C244.014681,581 216.070896,567.586758 189.801357,540.760274 L0,312.351433 L119.473613,168.696032 C127.238402,159.452721 132.949889,154.571497 136.608071,154.05236 C140.266254,153.533222 145.406549,156.874456 152.028955,164.076062 Z" id="Path-7-Copy-2" fill="#5EC6FA"></path>
+				<polygon id="Path-9-Copy" fill="#4493CC" points="285 312 394.646112 493 418 463.576523"></polygon>
+				<path d="M437.111412,163.369451 L565.280498,304.034909 C725.912872,113.948092 808.062662,18.0038424 811.729868,16.20216 C861.201916,-8.10324357 905.00208,-5.06263389 937.658113,25.323989 C970.497061,55.8808142 982.407326,96.5754965 967.916664,145.583628 C966.902309,149.014226 960.386303,158.519592 948.368646,174.099727 L641.267422,540.692075 C615.910653,567.564025 588.415222,581 558.781126,581 C529.147031,581 501.188089,567.564025 474.904302,540.692075 L285,311.896122 L404.538414,167.997251 C412.307414,158.738275 418.021998,153.848778 421.682165,153.328761 C425.342332,152.808743 430.485415,156.15564 437.111412,163.369451 Z" id="Path-7-Copy-3" fill="#62D48B"></path>
+				<g transform="translate(1116, 0)" fill="#081924" fill-rule="nonzero">
+					<g>
+						<path d="M463.905124,549.165063 C429.771637,575.537396 366.934989,591.82619 300.219537,591.82619 C110.158073,591.82619 0.775761077,487.88817 0,297.852237 C0.775761077,106.264991 110.158073,0 300.219537,0 C352.195529,0 417.359459,10.0835393 463.129363,38.0071865 L463.129363,145.047834 C427.444353,126.43207 373.141078,114.02156 313.407475,114.02156 C193.164508,114.02156 124.121772,180.72805 124.121772,297.852237 C124.121772,411.873797 193.164508,477.804631 313.407475,477.804631 C371.589556,477.804631 429.771637,465.394121 463.905124,444.451386 L463.905124,549.165063 Z" id="Path"></path>
+					</g>
+					<g transform="translate(503.0955, 7.2952)">
+						<path d="M273.029498,152.051261 C219.509511,152.051261 172.970392,176.875957 138.841705,221.870718 L138.841705,0 L29.4747754,0 L0,79.1287175 C17.0643436,84.5591197 21.7182555,92.3168371 21.7182555,127.226565 L21.7182555,577.949946 L138.841705,577.949946 L138.841705,304.878294 C161.335613,269.968566 196.239952,249.022729 232.695595,249.022729 C283.112974,249.022729 311.812097,280.053598 311.812097,332.806077 L311.812097,577.949946 L428.935547,577.949946 L428.935547,309.532924 C428.935547,207.906826 373.088604,152.051261 273.029498,152.051261 Z" id="Path"></path>
+						<path d="M650.58397,152.051261 C592.410072,152.051261 530.357913,163.687837 483.043142,185.409446 L506.312701,255.228903 C544.319649,239.713468 590.083116,230.404207 625.763107,230.404207 C682.385702,230.404207 721.168301,249.7985 722.719605,313.411783 C689.36657,306.429837 648.257014,304.102522 623.436151,304.102522 C510.966613,304.102522 447.363151,364.612718 447.363151,449.171838 C447.363151,530.62787 500.107486,584.931892 593.961376,584.931892 C650.58397,584.931892 694.796133,567.089142 723.495257,539.937131 L725.822213,577.949946 L835.964794,577.949946 L835.964794,324.272587 C835.964794,216.440316 766.931768,152.051261 650.58397,152.051261 Z M623.436151,499.597001 C573.018772,499.597001 542.768345,480.978479 542.768345,444.517207 C542.768345,403.401305 576.897032,383.23124 634.295279,383.23124 C662.994402,383.23124 699.450045,388.661642 722.719605,394.092044 L722.719605,446.068751 C711.860477,469.341903 667.648314,499.597001 623.436151,499.597001 Z" id="Shape"></path>
+						<path d="M1139.83233,476.323848 C1125.09494,483.305794 1105.70364,487.960425 1087.08799,487.960425 C1051.408,487.960425 1028.13844,467.790359 1028.13844,430.553316 L1028.13844,245.919642 L1146.8132,231.95575 L1146.8132,159.033207 L1028.13844,159.033207 L1028.13844,42.6674457 L911.014993,42.6674457 L911.014993,159.033207 L841.981966,159.033207 L828.795883,228.076892 L911.014993,244.368098 L911.014993,446.068751 C911.014993,539.161359 970.740196,584.931892 1048.30539,584.931892 C1094.06886,584.931892 1142.15928,572.519544 1169.3071,553.901022 L1139.83233,476.323848 Z" id="Path"></path>
+						<path d="M1386.32598,152.051261 C1261.44601,152.051261 1169.91908,231.95575 1169.14343,368.491577 C1169.91908,505.803175 1261.44601,584.931892 1410.37119,584.931892 C1466.21814,584.931892 1526.71899,566.31337 1556.96942,539.937131 L1530.59725,457.705327 C1503.44943,480.978479 1453.8077,494.94237 1410.37119,494.94237 C1339.78686,494.94237 1292.47209,460.808414 1278.51036,409.607479 L1588.77115,409.607479 C1611.26506,240.489239 1511.20595,152.051261 1386.32598,152.051261 Z M1273.08079,329.70299 C1276.95905,278.502055 1313.41469,239.713468 1378.56946,239.713468 C1449.15379,239.713468 1489.48769,272.295881 1489.48769,329.70299 L1273.08079,329.70299 Z" id="Shape"></path>
+						<path d="M1739.05959,0 L1739.05959,431.329088 C1739.05959,468.566131 1762.32915,488.736196 1798.00914,488.736196 C1816.62479,488.736196 1836.01609,484.081566 1850.75348,477.09962 L1880.22825,554.676794 C1853.08043,573.295316 1804.99001,584.931892 1759.22654,584.931892 C1671.57787,584.931892 1621.93614,534.506729 1621.93614,446.844522 L1621.93614,127.226565 C1621.93614,92.3168371 1617.28223,84.5591197 1600.21788,79.1287175 L1629.69266,0 L1739.05959,0 Z" id="Path"></path>
+						<path d="M2253.90446,159.033207 L2134.45406,159.033207 L2034.39495,477.09962 L1934.33585,159.033207 L1814.10979,159.033207 L1973.8941,577.949946 L1957.60541,616.738533 C1952.17584,641.563229 1931.23324,661.733294 1911.84194,661.733294 C1893.22629,661.733294 1878.4889,655.52712 1864.52717,650.096718 L1835.05239,727.673892 C1863.75152,744.740871 1900.98281,758.704762 1942.86802,758.704762 C2005.69583,758.704762 2043.70278,705.176512 2077.05581,619.84162 L2094.12015,577.949946 L2253.90446,159.033207 Z" id="Path"></path>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>
+</a>
+    <a class="button" href="https://app.chately.co">Ir al panel</a>
   </header>
-  <section class="hero operational" id="hero">
-    <span class="dot operational"></span>
-    <div><h1 id="hero-title">Todo funciona con normalidad</h1><p id="hero-text"></p></div>
-  </section>
+
+  <p class="eyebrow"><span class="dot live operational" id="hero-dot"></span>Estado del servicio</p>
+  <h1 class="operational" id="hero-title">Todo funciona con normalidad</h1>
+  <p class="lead" id="hero-text"></p>
+  <p class="updated" id="updated"></p>
+
   <div id="active"></div>
   <h2>Componentes</h2>
   <div class="card" id="components"></div>
   <h2>Últimos 14 días</h2>
   <div class="card" id="history"></div>
-  <footer id="footer">Esta página está alojada fuera de la plataforma: sigue funcionando aunque Chately no cargue.</footer>
+
+  <footer>
+    <span id="footer-text">Esta página está alojada fuera de la plataforma: sigue funcionando aunque Chately no cargue.</span>
+    <a href="https://chately.co">chately.co</a>
+  </footer>
 </main>
-<script id="status-data" type="application/json">{"generated_at": "2026-10-23T17:09:30.001535+00:00", "status": "operational", "status_label": "Todo funciona con normalidad", "components": [{"key": "panel", "label": "Panel web", "status": "operational", "status_label": "Funciona"}, {"key": "mobile", "label": "App m\u00f3vil", "status": "operational", "status_label": "Funciona"}, {"key": "whatsapp", "label": "Mensajes de WhatsApp", "status": "operational", "status_label": "Funciona"}, {"key": "meta", "label": "Messenger e Instagram", "status": "operational", "status_label": "Funciona"}, {"key": "ai", "label": "Agentes de IA y Ly", "status": "operational", "status_label": "Funciona"}, {"key": "campaigns", "label": "Campa\u00f1as y plantillas", "status": "operational", "status_label": "Funciona"}, {"key": "flows", "label": "Automatizaciones", "status": "operational", "status_label": "Funciona"}, {"key": "api", "label": "API y webhooks", "status": "operational", "status_label": "Funciona"}], "active": [], "history": [], "support_url": ""}</script>
+<script id="status-data" type="application/json">{"generated_at": "2026-10-23T17:13:35.124084+00:00", "status": "operational", "status_label": "Todo funciona con normalidad", "components": [{"key": "panel", "label": "Panel web", "status": "operational", "status_label": "Funciona"}, {"key": "mobile", "label": "App m\u00f3vil", "status": "operational", "status_label": "Funciona"}, {"key": "whatsapp", "label": "Mensajes de WhatsApp", "status": "operational", "status_label": "Funciona"}, {"key": "meta", "label": "Messenger e Instagram", "status": "operational", "status_label": "Funciona"}, {"key": "ai", "label": "Agentes de IA y Ly", "status": "operational", "status_label": "Funciona"}, {"key": "campaigns", "label": "Campa\u00f1as y plantillas", "status": "operational", "status_label": "Funciona"}, {"key": "flows", "label": "Automatizaciones", "status": "operational", "status_label": "Funciona"}, {"key": "api", "label": "API y webhooks", "status": "operational", "status_label": "Funciona"}], "active": [], "history": [], "support_url": ""}</script>
 <script>
 (function () {
   var initial = JSON.parse(document.getElementById("status-data").textContent);
+  // Título con una palabra en cursiva serif, como los títulos de chately.co.
+  var HEADLINES = {
+    operational: ["Todo ", "funciona", " con normalidad"],
+    degraded: ["Algunas partes van ", "lentas", ""],
+    partial: ["Falla ", "parcial", " del servicio"],
+    major: ["", "Caída", " del servicio"]
+  };
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
   function fmt(iso) {
-    var d = new Date(iso);
-    return d.toLocaleString("es", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    return new Date(iso).toLocaleString("es", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
   }
   function ago(iso) {
     var mins = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
@@ -108,18 +158,21 @@
     return h < 48 ? "hace " + h + " h" : fmt(iso);
   }
   function incidentNode(item) {
-    var box = el("div", "incident");
+    var resolved = item.status === "resolved";
+    var box = el("div", "incident " + (resolved ? "resolved" : item.impact));
     box.appendChild(el("h3", null, item.title));
     var meta = el("div", "meta");
-    var pill = el("span", "pill " + (item.status === "resolved" ? "resolved" : item.impact), item.status === "resolved" ? "Resuelto" : item.impact_label);
-    meta.appendChild(pill);
+    var tag = el("span", "tag");
+    tag.appendChild(el("span", "dot " + (resolved ? "resolved" : item.impact)));
+    tag.appendChild(document.createTextNode(resolved ? "Resuelto" : item.impact_label + " · " + item.status_label));
+    meta.appendChild(tag);
     var comps = (item.components || []).map(function (c) { return c.label; }).join(", ");
-    meta.appendChild(document.createTextNode(item.status_label + (comps ? " · " + comps : "") + " · desde " + fmt(item.started_at)));
+    meta.appendChild(el("span", null, (comps ? comps + " · " : "") + "desde " + fmt(item.started_at)));
     box.appendChild(meta);
     var ol = el("ol", "timeline");
     (item.updates || []).forEach(function (u) {
       var li = el("li");
-      var head = el("div", "meta");
+      var head = el("div", "when");
       head.appendChild(el("b", null, u.status_label));
       head.appendChild(document.createTextNode(" · " + fmt(u.created_at)));
       li.appendChild(head);
@@ -130,13 +183,17 @@
     return box;
   }
   function render(data) {
-    var hero = document.getElementById("hero");
-    hero.className = "hero " + data.status;
-    hero.querySelector(".dot").className = "dot " + data.status;
-    document.getElementById("hero-title").textContent = data.status_label;
+    var parts = HEADLINES[data.status] || ["", data.status_label, ""];
+    var title = document.getElementById("hero-title");
+    title.className = data.status;
+    title.textContent = "";
+    title.appendChild(document.createTextNode(parts[0]));
+    title.appendChild(el("em", null, parts[1]));
+    title.appendChild(document.createTextNode(parts[2]));
+    document.getElementById("hero-dot").className = "dot live " + data.status;
     document.getElementById("hero-text").textContent = data.active.length
-      ? "Estamos trabajando en ello. Abajo están las actualizaciones."
-      : "Panel, app, mensajes e IA funcionan con normalidad.";
+      ? "Estamos trabajando en ello. No es un problema de tu cuenta: no necesitas cambiar nada. Abajo están las actualizaciones."
+      : "Panel, app, mensajes de WhatsApp, Messenger e Instagram y agentes de IA funcionan con normalidad.";
     document.getElementById("updated").textContent = "Última actualización " + ago(data.generated_at);
     var active = document.getElementById("active");
     active.innerHTML = "";
@@ -162,10 +219,9 @@
     if (!data.history.length) history.appendChild(el("div", "empty", "Sin incidentes en los últimos 14 días."));
     data.history.forEach(function (item) { history.appendChild(incidentNode(item)); });
     if (data.support_url) {
-      var footer = document.getElementById("footer");
-      footer.innerHTML = "";
-      footer.appendChild(document.createTextNode("Esta página está alojada fuera de la plataforma. ¿Necesitas ayuda? "));
-      var a = el("a", null, "Escríbenos"); a.href = data.support_url; a.rel = "noopener"; footer.appendChild(a);
+      var footer = document.getElementById("footer-text");
+      footer.textContent = "Alojada fuera de la plataforma: sigue funcionando aunque Chately no cargue. ";
+      var a = el("a", null, "¿Necesitas ayuda?"); a.href = data.support_url; a.rel = "noopener"; footer.appendChild(a);
     }
   }
   var current = initial;
