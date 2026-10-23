@@ -65,6 +65,13 @@
   .empty { padding: 16px; color: var(--muted); }
   footer { margin-top: 40px; color: var(--muted); font-size: 13px; text-align: center; }
   footer a { color: inherit; }
+  @media (max-width: 520px) {
+    main { padding-top: 20px; }
+    header { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .brand { white-space: nowrap; }
+    .hero { padding: 18px; }
+    .hero h1 { font-size: 18px; }
+  }
 </style>
 </head>
 <body>
@@ -84,7 +91,7 @@
   <div class="card" id="history"></div>
   <footer id="footer">Esta página está alojada fuera de la plataforma: sigue funcionando aunque Chately no cargue.</footer>
 </main>
-<script id="status-data" type="application/json">{"generated_at": "2026-10-23T17:08:28.473602+00:00", "status": "operational", "status_label": "Todo funciona con normalidad", "components": [{"key": "panel", "label": "Panel web", "status": "operational", "status_label": "Funciona"}, {"key": "mobile", "label": "App m\u00f3vil", "status": "operational", "status_label": "Funciona"}, {"key": "whatsapp", "label": "Mensajes de WhatsApp", "status": "operational", "status_label": "Funciona"}, {"key": "meta", "label": "Messenger e Instagram", "status": "operational", "status_label": "Funciona"}, {"key": "ai", "label": "Agentes de IA y Ly", "status": "operational", "status_label": "Funciona"}, {"key": "campaigns", "label": "Campa\u00f1as y plantillas", "status": "operational", "status_label": "Funciona"}, {"key": "flows", "label": "Automatizaciones", "status": "operational", "status_label": "Funciona"}, {"key": "api", "label": "API y webhooks", "status": "operational", "status_label": "Funciona"}], "active": [], "history": [], "support_url": ""}</script>
+<script id="status-data" type="application/json">{"generated_at": "2026-10-23T17:09:30.001535+00:00", "status": "operational", "status_label": "Todo funciona con normalidad", "components": [{"key": "panel", "label": "Panel web", "status": "operational", "status_label": "Funciona"}, {"key": "mobile", "label": "App m\u00f3vil", "status": "operational", "status_label": "Funciona"}, {"key": "whatsapp", "label": "Mensajes de WhatsApp", "status": "operational", "status_label": "Funciona"}, {"key": "meta", "label": "Messenger e Instagram", "status": "operational", "status_label": "Funciona"}, {"key": "ai", "label": "Agentes de IA y Ly", "status": "operational", "status_label": "Funciona"}, {"key": "campaigns", "label": "Campa\u00f1as y plantillas", "status": "operational", "status_label": "Funciona"}, {"key": "flows", "label": "Automatizaciones", "status": "operational", "status_label": "Funciona"}, {"key": "api", "label": "API y webhooks", "status": "operational", "status_label": "Funciona"}], "active": [], "history": [], "support_url": ""}</script>
 <script>
 (function () {
   var initial = JSON.parse(document.getElementById("status-data").textContent);
