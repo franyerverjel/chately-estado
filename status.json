@@ -1,0 +1,58 @@
+{
+ "generated_at": "2026-10-23T17:08:28.473602+00:00",
+ "status": "operational",
+ "status_label": "Todo funciona con normalidad",
+ "components": [
+  {
+   "key": "panel",
+   "label": "Panel web",
+   "status": "operational",
+   "status_label": "Funciona"
+  },
+  {
+   "key": "mobile",
+   "label": "App móvil",
+   "status": "operational",
+   "status_label": "Funciona"
+  },
+  {
+   "key": "whatsapp",
+   "label": "Mensajes de WhatsApp",
+   "status": "operational",
+   "status_label": "Funciona"
+  },
+  {
+   "key": "meta",
+   "label": "Messenger e Instagram",
+   "status": "operational",
+   "status_label": "Funciona"
+  },
+  {
+   "key": "ai",
+   "label": "Agentes de IA y Ly",
+   "status": "operational",
+   "status_label": "Funciona"
+  },
+  {
+   "key": "campaigns",
+   "label": "Campañas y plantillas",
+   "status": "operational",
+   "status_label": "Funciona"
+  },
+  {
+   "key": "flows",
+   "label": "Automatizaciones",
+   "status": "operational",
+   "status_label": "Funciona"
+  },
+  {
+   "key": "api",
+   "label": "API y webhooks",
+   "status": "operational",
+   "status_label": "Funciona"
+  }
+ ],
+ "active": [],
+ "history": [],
+ "support_url": ""
+}

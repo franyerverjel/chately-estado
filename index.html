@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estado de Chately</title>
+<meta name="description" content="Estado en vivo de Chately: panel, app, WhatsApp, IA y más.">
+<meta name="robots" content="noindex">
+<style>
+  /* Página autónoma: sin fuentes ni scripts externos, porque tiene que cargar aunque medio internet esté caído. */
+  :root {
+    --ink: #081924; --muted: #5b6b78; --line: #e4e9ee; --card: #ffffff; --bg: #f5f7f9;
+    --ok: #1f9d55; --ok-soft: #e7f7ee; --degraded: #b7791f; --degraded-soft: #fdf6e3;
+    --partial: #dd6b20; --partial-soft: #fdeee3; --major: #d64545; --major-soft: #fdecec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e8eef3; --muted: #93a3b1; --line: #22313d; --card: #0f1d27; --bg: #081924;
+      --ok-soft: #10301f; --degraded-soft: #33270f; --partial-soft: #3a2312; --major-soft: #3b1717;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -.01em; }
+  .logo { width: 28px; height: 28px; border-radius: 8px; background: #62D48B; display: grid; place-items: center;
+    color: #081924; font-weight: 800; }
+  .updated { color: var(--muted); font-size: 13px; }
+  .hero { border-radius: 16px; padding: 22px 22px; display: flex; gap: 14px; align-items: center; margin-bottom: 28px;
+    border: 1px solid var(--line); background: var(--card); }
+  .hero .dot { width: 14px; height: 14px; flex: none; }
+  .hero h1 { margin: 0; font-size: 20px; letter-spacing: -.01em; }
+  .hero p { margin: 2px 0 0; color: var(--muted); }
+  .hero.operational { background: var(--ok-soft); border-color: transparent; }
+  .hero.degraded { background: var(--degraded-soft); border-color: transparent; }
+  .hero.partial { background: var(--partial-soft); border-color: transparent; }
+  .hero.major { background: var(--major-soft); border-color: transparent; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--ok); }
+  .dot.degraded { background: var(--degraded); } .dot.partial { background: var(--partial); }
+  .dot.major { background: var(--major); } .dot.resolved { background: var(--ok); }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 32px 0 10px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; gap: 12px; }
+  .row + .row { border-top: 1px solid var(--line); }
+  .row .state { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; white-space: nowrap; }
+  .incident { padding: 16px; }
+  .incident + .incident { border-top: 1px solid var(--line); }
+  .incident h3 { margin: 0 0 4px; font-size: 16px; }
+  .meta { color: var(--muted); font-size: 13px; }
+  .pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px;
+    background: var(--line); color: var(--ink); margin-right: 6px; }
+  .pill.major { background: var(--major-soft); color: var(--major); }
+  .pill.partial { background: var(--partial-soft); color: var(--partial); }
+  .pill.degraded { background: var(--degraded-soft); color: var(--degraded); }
+  .pill.resolved { background: var(--ok-soft); color: var(--ok); }
+  ol.timeline { list-style: none; margin: 12px 0 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); }
+  ol.timeline li { position: relative; padding: 0 0 12px 10px; }
+  ol.timeline li::before { content: ""; position: absolute; left: -20px; top: 7px; width: 10px; height: 10px;
+    border-radius: 50%; background: var(--card); border: 2px solid var(--muted); }
+  ol.timeline li:first-child::before { border-color: var(--ink); background: var(--ink); }
+  ol.timeline b { font-weight: 600; }
+  ol.timeline p { margin: 2px 0 0; white-space: pre-line; }
+  .empty { padding: 16px; color: var(--muted); }
+  footer { margin-top: 40px; color: var(--muted); font-size: 13px; text-align: center; }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand"><span class="logo">C</span> Estado de Chately</div>
+    <div class="updated" id="updated"></div>
+  </header>
+  <section class="hero operational" id="hero">
+    <span class="dot operational"></span>
+    <div><h1 id="hero-title">Todo funciona con normalidad</h1><p id="hero-text"></p></div>
+  </section>
+  <div id="active"></div>
+  <h2>Componentes</h2>
+  <div class="card" id="components"></div>
+  <h2>Últimos 14 días</h2>
+  <div class="card" id="history"></div>
+  <footer id="footer">Esta página está alojada fuera de la plataforma: sigue funcionando aunque Chately no cargue.</footer>
+</main>
+<script id="status-data" type="application/json">{"generated_at": "2026-10-23T17:08:28.473602+00:00", "status": "operational", "status_label": "Todo funciona con normalidad", "components": [{"key": "panel", "label": "Panel web", "status": "operational", "status_label": "Funciona"}, {"key": "mobile", "label": "App m\u00f3vil", "status": "operational", "status_label": "Funciona"}, {"key": "whatsapp", "label": "Mensajes de WhatsApp", "status": "operational", "status_label": "Funciona"}, {"key": "meta", "label": "Messenger e Instagram", "status": "operational", "status_label": "Funciona"}, {"key": "ai", "label": "Agentes de IA y Ly", "status": "operational", "status_label": "Funciona"}, {"key": "campaigns", "label": "Campa\u00f1as y plantillas", "status": "operational", "status_label": "Funciona"}, {"key": "flows", "label": "Automatizaciones", "status": "operational", "status_label": "Funciona"}, {"key": "api", "label": "API y webhooks", "status": "operational", "status_label": "Funciona"}], "active": [], "history": [], "support_url": ""}</script>
+<script>
+(function () {
+  var initial = JSON.parse(document.getElementById("status-data").textContent);
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function fmt(iso) {
+    var d = new Date(iso);
+    return d.toLocaleString("es", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  }
+  function ago(iso) {
+    var mins = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
+    if (mins < 1) return "hace un momento";
+    if (mins < 60) return "hace " + mins + " min";
+    var h = Math.round(mins / 60);
+    return h < 48 ? "hace " + h + " h" : fmt(iso);
+  }
+  function incidentNode(item) {
+    var box = el("div", "incident");
+    box.appendChild(el("h3", null, item.title));
+    var meta = el("div", "meta");
+    var pill = el("span", "pill " + (item.status === "resolved" ? "resolved" : item.impact), item.status === "resolved" ? "Resuelto" : item.impact_label);
+    meta.appendChild(pill);
+    var comps = (item.components || []).map(function (c) { return c.label; }).join(", ");
+    meta.appendChild(document.createTextNode(item.status_label + (comps ? " · " + comps : "") + " · desde " + fmt(item.started_at)));
+    box.appendChild(meta);
+    var ol = el("ol", "timeline");
+    (item.updates || []).forEach(function (u) {
+      var li = el("li");
+      var head = el("div", "meta");
+      head.appendChild(el("b", null, u.status_label));
+      head.appendChild(document.createTextNode(" · " + fmt(u.created_at)));
+      li.appendChild(head);
+      li.appendChild(el("p", null, u.body));
+      ol.appendChild(li);
+    });
+    box.appendChild(ol);
+    return box;
+  }
+  function render(data) {
+    var hero = document.getElementById("hero");
+    hero.className = "hero " + data.status;
+    hero.querySelector(".dot").className = "dot " + data.status;
+    document.getElementById("hero-title").textContent = data.status_label;
+    document.getElementById("hero-text").textContent = data.active.length
+      ? "Estamos trabajando en ello. Abajo están las actualizaciones."
+      : "Panel, app, mensajes e IA funcionan con normalidad.";
+    document.getElementById("updated").textContent = "Última actualización " + ago(data.generated_at);
+    var active = document.getElementById("active");
+    active.innerHTML = "";
+    if (data.active.length) {
+      active.appendChild(el("h2", null, "Incidentes en curso"));
+      var card = el("div", "card");
+      data.active.forEach(function (item) { card.appendChild(incidentNode(item)); });
+      active.appendChild(card);
+    }
+    var comps = document.getElementById("components");
+    comps.innerHTML = "";
+    data.components.forEach(function (c) {
+      var row = el("div", "row");
+      row.appendChild(el("span", null, c.label));
+      var state = el("span", "state");
+      state.appendChild(el("span", "dot " + c.status));
+      state.appendChild(document.createTextNode(c.status === "operational" ? "Funciona" : c.status_label));
+      row.appendChild(state);
+      comps.appendChild(row);
+    });
+    var history = document.getElementById("history");
+    history.innerHTML = "";
+    if (!data.history.length) history.appendChild(el("div", "empty", "Sin incidentes en los últimos 14 días."));
+    data.history.forEach(function (item) { history.appendChild(incidentNode(item)); });
+    if (data.support_url) {
+      var footer = document.getElementById("footer");
+      footer.innerHTML = "";
+      footer.appendChild(document.createTextNode("Esta página está alojada fuera de la plataforma. ¿Necesitas ayuda? "));
+      var a = el("a", null, "Escríbenos"); a.href = data.support_url; a.rel = "noopener"; footer.appendChild(a);
+    }
+  }
+  var current = initial;
+  render(current);
+  function refresh() {
+    fetch("status.json?t=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) { if (data) { current = data; } render(current); })
+      .catch(function () { render(current); });
+  }
+  setInterval(refresh, 60000);
+})();
+</script>
+</body>
+</html>
