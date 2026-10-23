@@ -1,25 +1,25 @@
 {
- "generated_at": "2026-10-23T18:47:26.808357+00:00",
- "status": "partial",
- "status_label": "Falla parcial del servicio",
+ "generated_at": "2026-10-23T18:48:57.849810+00:00",
+ "status": "operational",
+ "status_label": "Todo funciona con normalidad",
  "components": [
   {
    "key": "panel",
    "label": "Panel web",
-   "status": "partial",
-   "status_label": "Falla parcial"
+   "status": "operational",
+   "status_label": "Funciona"
   },
   {
    "key": "mobile",
    "label": "App móvil",
-   "status": "partial",
-   "status_label": "Falla parcial"
+   "status": "operational",
+   "status_label": "Funciona"
   },
   {
    "key": "whatsapp",
    "label": "Mensajes de WhatsApp",
-   "status": "partial",
-   "status_label": "Falla parcial"
+   "status": "operational",
+   "status_label": "Funciona"
   },
   {
    "key": "meta",
@@ -30,36 +30,37 @@
   {
    "key": "ai",
    "label": "Agentes de IA y Ly",
-   "status": "partial",
-   "status_label": "Falla parcial"
+   "status": "operational",
+   "status_label": "Funciona"
   },
   {
    "key": "campaigns",
    "label": "Campañas y plantillas",
-   "status": "partial",
-   "status_label": "Falla parcial"
+   "status": "operational",
+   "status_label": "Funciona"
   },
   {
    "key": "flows",
    "label": "Automatizaciones",
-   "status": "partial",
-   "status_label": "Falla parcial"
+   "status": "operational",
+   "status_label": "Funciona"
   },
   {
    "key": "api",
    "label": "API y webhooks",
-   "status": "partial",
-   "status_label": "Falla parcial"
+   "status": "operational",
+   "status_label": "Funciona"
   }
  ],
- "active": [
+ "active": [],
+ "history": [
   {
    "id": "2f9a36b6-e1c1-4806-9f7e-bfec9605c6ce",
    "title": "Estamos afectados por una caída global de Cloudflare",
    "impact": "partial",
    "impact_label": "Falla parcial",
-   "status": "monitoring",
-   "status_label": "Monitoreando",
+   "status": "resolved",
+   "status_label": "Resuelto",
    "components": [
     {
      "key": "panel",
@@ -91,10 +92,17 @@
     }
    ],
    "started_at": "2026-10-23T17:58:45.079497+00:00",
-   "resolved_at": null,
-   "visible_until": null,
-   "updated_at": "2026-10-23T18:47:26.793027+00:00",
+   "resolved_at": "2026-10-23T18:48:57.789258+00:00",
+   "visible_until": "2026-10-23T21:48:57.789258+00:00",
+   "updated_at": "2026-10-23T18:48:57.790576+00:00",
    "updates": [
+    {
+     "id": "604ff938-a7f3-4470-ad6d-7c762fa9c44e",
+     "status": "resolved",
+     "status_label": "Resuelto",
+     "body": "El incidente fue resuelto. Seguiremos atentos al funcionamiento de los servicios; si notas algún problema, recarga la página en unos minutos.",
+     "created_at": "2026-10-23T18:48:57.790576+00:00"
+    },
     {
      "id": "dbbf2073-47a0-42ee-9c8e-d66324e6d4ec",
      "status": "monitoring",
@@ -112,6 +120,5 @@
    ]
   }
  ],
- "history": [],
  "support_url": "https://wa.me/573133427384?text=Hola%2C%20necesito%20ayuda%20con%20Chately"
 }
