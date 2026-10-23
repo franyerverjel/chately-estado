@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-23T17:59:57.808490+00:00",
+ "generated_at": "2026-10-23T18:46:29.063147+00:00",
  "status": "partial",
  "status_label": "Falla parcial del servicio",
  "components": [
@@ -18,8 +18,8 @@
   {
    "key": "whatsapp",
    "label": "Mensajes de WhatsApp",
-   "status": "operational",
-   "status_label": "Funciona"
+   "status": "partial",
+   "status_label": "Falla parcial"
   },
   {
    "key": "meta",
@@ -30,26 +30,26 @@
   {
    "key": "ai",
    "label": "Agentes de IA y Ly",
-   "status": "operational",
-   "status_label": "Funciona"
+   "status": "partial",
+   "status_label": "Falla parcial"
   },
   {
    "key": "campaigns",
    "label": "Campañas y plantillas",
-   "status": "operational",
-   "status_label": "Funciona"
+   "status": "partial",
+   "status_label": "Falla parcial"
   },
   {
    "key": "flows",
    "label": "Automatizaciones",
-   "status": "operational",
-   "status_label": "Funciona"
+   "status": "partial",
+   "status_label": "Falla parcial"
   },
   {
    "key": "api",
    "label": "API y webhooks",
-   "status": "operational",
-   "status_label": "Funciona"
+   "status": "partial",
+   "status_label": "Falla parcial"
   }
  ],
  "active": [
@@ -68,6 +68,26 @@
     {
      "key": "mobile",
      "label": "App móvil"
+    },
+    {
+     "key": "whatsapp",
+     "label": "Mensajes de WhatsApp"
+    },
+    {
+     "key": "ai",
+     "label": "Agentes de IA y Ly"
+    },
+    {
+     "key": "api",
+     "label": "API y webhooks"
+    },
+    {
+     "key": "campaigns",
+     "label": "Campañas y plantillas"
+    },
+    {
+     "key": "flows",
+     "label": "Automatizaciones"
     }
    ],
    "started_at": "2026-10-23T17:58:45.079497+00:00",
